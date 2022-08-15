@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Data cryptor
+    </title>
+
+<style>
+html {
+    box-sizing: border-box
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit
+}
+
+body {
+margin: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  background: #333;
+  font-family: Helvetica, Arial, Sans-Serif;
+  color: #eee;
+}
+
+h1, p {
+  width: 100%;
+  text-align: center;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+p {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.encrypt,
+.decrypt {
+  width: 400px;
+  padding: 2rem;
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.25);
+  box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+  border-radius: 4px;
+}
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  input {
+    width: 75%;
+    font-size: 1.25rem;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+
+footer {
+  width: 100vw;
+  margin: 1rem;
+  text-align: center;
+}
+  i:hover,
+  .heart:hover {
+    transform: scale(3);
+  }
+  i {
+    transition: all 0.5s ease;
+  }
+  
+  a {
+    color: #eee;
+    margin: 0 5px;
+  }
+  
+  .heart {
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    background: red;
+    transform: rotate(45deg);
+    transition: all 0.5s ease;
+    position: relative;
+    margin: 0 5px;
+  }
+  .heart:before {
+    content: '';
+    height: 10px;
+    width: 10px;
+    background: red;
+    border-radius: 50%;
+    position: absolute;
+    top: -6px;
+    left: 0;
+  }
+  .heart:after {
+    content: '';
+    height: 10px;
+    width: 10px;
+    background: red;
+    border-radius: 50%;
+    position: absolute;
+    left: -6px;
+  }
+</style>
+
+</head>
+<body>
+    
+<h1>Encrypt/Decrypt Text</h1>
+<p>Encrypts or decrypts text as you type</p>
+
+<div class="encrypt">
+    <h2>Encrypt Text</h2>
+    <input class="e" id="enc" type="text" placeholder="Enter Text">
+    <span class="encrypted-text">Your encrypted text will show here...</span>
+</div>
+
+<div class="decrypt">
+    <h2>Decrypt Text</h2>
+    <input class="d" id="dec" type="text" placeholder="Enter Text">
+    <span class="decrypted-text">Your decrypted text will show here...</span>
+</div>
+<style>
+.encrypted-text {
+    width: fit-content;
+}
+.decrypted-text{
+    width: fit-content;
+}
+</style>
+
+<div class="container">
+    <button id="btn">
+        <p id="btnText">Enter</p>
+        <div class="check-box">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+            </svg>
+        </div>
+    </button>
+</div>
+
+<style>
+    button{
+        width: 270px;
+        height: 80px;
+        border: none;
+        outline: none;
+        background: #2f2f2f;
+        color: #fff;
+        font-size: 22px;
+        border-radius: 40px;
+        text-align: center;
+        box-shadow: 0 6px 20px -5px rgba(0,0,0,0.4);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+    
+    .check-box{
+        width: 80px;
+        height: 80px;
+        border-radius: 40px;
+        box-shadow: 0 0 12px -2px rgba(0,0,0,0.5);
+        position: absolute;
+        top: 0;
+        right: -40px;
+        opacity: 0;
+    }
+    
+    .check-box svg{
+        width: 40px;
+        margin: 20px;
+    }
+    
+    svg path{
+        stroke-width: 3;
+        stroke: #fff;
+        stroke-dasharray: 34;
+        stroke-dashoffset: 34;
+        stroke-linecap: round;
+    }
+    
+    .active{
+        background: #11105cad;
+        transition: .5s;
+    }
+    
+    .active .check-box{
+        right: 0;
+        opacity: 1;
+        transition: .5s;
+    }
+    
+    .active p{
+        margin-right: 125px;
+        transition: .5s;
+    }
+    
+    .active svg path{
+        stroke-dashoffset: 0;
+        transition: .5s;
+        transition-delay: .5s;
+    }</style>
+  
+
+<footer>
+    Made with <span class="heart"></span> by ThefCraft.
+</footer>
+
+<script>
+    const eIn = document.querySelector('.e');
+    const eOut = document.querySelector('.encrypted-text');
+    
+    const dIn = document.querySelector('.d');
+    const dOut = document.querySelector('.decrypted-text');
+    
+    let encryptedMessage = '';
+    let decryptedMessage = '';
+    
+    function data_cryptor(data){
+        function letter_cryptor(data){
+            output=''
+            all_letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            for (let i = 0; i < data.length; i++) {
+                find = false;
+                for (let j = 0; j < all_letters.length; j++) {
+                    if (data[i] == all_letters[j]){ 
+                        output += all_letters[all_letters.length-j-1];
+                        find = true;
+                    }
+                }
+                if (find==false) { output += data[i]}
+            }
+            return output;
+        }
+        function int_cryptor(data){
+            output=''
+            digits = '0123456789';
+            for (let i = 0; i < data.length; i++) {
+                find = false;
+                for (let j = 0; j < digits.length; j++) {
+                    if (data[i] == digits[j]){ 
+                        output += digits[digits.length-j-1];
+                        find = true;
+                    }
+                }
+                if (find==false) { output += data[i]}
+            }
+            return output;
+        }
+        function reverse_cryptor(data){
+            output = ''
+            for (let i = 0; i < data.length; i++) {
+                output+=data[data.length-i-1]
+            }   
+            return output
+        }
+
+        output = letter_cryptor(data.split('.Vru')[0]);
+        output = int_cryptor(output);
+        output = reverse_cryptor(output);
+        console.log(output);
+        return output}
+
+    eIn.addEventListener('input', e => {
+        
+        eOut.innerHTML = data_cryptor(document.getElementById('enc').value);
+    })
+   
+    dIn.addEventListener('input', e => {
+        dOut.innerHTML = data_cryptor(document.getElementById('dec').value);
+    })
+
+    const btn = document.querySelector("#btn");
+    const btnText = document.querySelector("#btnText");
+
+    btn.onclick = () => {
+        btnText.innerHTML = "Done";
+        btn.classList.add("active");
+        dOut.innerHTML = data_cryptor(document.getElementById('dec').value);
+        eOut.innerHTML = data_cryptor(document.getElementById('enc').value);
+        setTimeout( function() { btnText.innerHTML = "Enter";
+        btn.classList.remove("active");; }, 1500);
+        
+    };
+
+</script>
+
+
+</body>
